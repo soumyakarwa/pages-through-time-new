@@ -16,7 +16,8 @@ body{
     display: flex;
     justify-content: flex-start; 
     align-items: flex-start; 
-    width: 100%; 
+    width: fit-content; 
+    height: fit-content; 
     /* padding: 10px; Optional: Adds some padding around the containers */
 }
 
@@ -47,9 +48,11 @@ body{
 
 .d3-container{
     flex: 2; 
-    width: 60vw; 
-    height: 150vh;  
+    /* width: 60vw; 
+    height: 200vh;   */
     /* padding: 0.5rem;  */
+    width: 105vw; 
+    height: 100vh; 
 }
 
 @font-face {

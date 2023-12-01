@@ -56,30 +56,54 @@ const svg = d3.select('#parentDiv').append('svg')
 .attr('width', width)
 .attr('height', height);
 
+console.log(groupedByYear); 
+
 
 const yearKeys = Object.keys(groupedByYear);
-let yOffset = 0;
+// let yOffset = 0;
+let xOffset = 0;
 
 yearKeys.forEach(year => {
     const yearData = groupedByYear[year];
-    const groupHeight = 125; 
-    let xOffset = 0; 
+    // const groupHeight = 125; 
+    const groupWidth = 125; 
+    // let xOffset = 50; 
+    let yOffset = height - 50;
 
+    svg.append('text')
+      // .attr('x', 0)  
+      // .attr('y', yOffset + groupHeight/2 - 25)  
+      .text(year)
+      .attr('fill', 'black') 
+      .attr('font-size', '12px')
+      .attr('dominant-baseline', 'top')
+      .attr('x', xOffset + groupWidth/2 -25)
+      .attr('y', height); 
+      
     yearData.forEach((d, i) => {
-      const rectWidth = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
-      const emotionColor = emotionColorMap[d.Emotion]
+      // const rectWidth = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
+      // const rectHeight  = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight); 
+      const rectHeight = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
+      const rectWidth = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight);
+      console.log(d, rectHeight, yOffset);  
+      const emotionColor = emotionColorMap[d.Emotion]; 
   
       svg.append('rect')
-        .attr('x', xOffset)  
+        .attr('x', xOffset + 25 - rectWidth/2)
+        .attr('y', yOffset - rectHeight)
+        // .attr('x', xOffset)  
         .attr('width', rectWidth)
-        .attr('height', mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight))
-        .attr('y', yOffset + 25 - mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight) / 2)
-        .attr('fill', emotionColor);  
+        .attr('height', rectHeight)
+        // .attr('y', yOffset + 25 - rectHeight / 2)
+        .attr('fill', emotionColor); 
+        
   
-      xOffset += rectWidth;
+      // xOffset += rectWidth;
+      yOffset -= rectHeight; 
     });
   
-    yOffset += groupHeight;
+    // yOffset += groupHeight;
+    xOffset += groupWidth; 
   });
   
 
