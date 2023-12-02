@@ -1,28 +1,29 @@
-const mapNumRange = (num, inMin, inMax, outMin, outMax) =>
-  ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-
 // parsing data
 const data = await d3.csv("./assets/dataset.csv"); 
-
 const maxLength = Math.max(...data.map(d => Number(d.Length)));
 const minLength = Math.min(...data.map(d => Number(d.Length)));
 const maxRating = Math.max(...data.map(d => Number(d.Rating)));
 const minRating = Math.min(...data.map(d => Number(d.Rating)));
 // const uniqueEmotions = Array.from(new Set(data.map(d => d.Emotion)));
-const maxRectWidth = 50; 
+const maxRectWidth = 40; 
 const minRectWidth = 5;
-const maxRectHeight = 100;
+const maxRectHeight = 80;
 const minRectHeight = 10;
+
+const colWidth = 115; 
 
 const negativeEmotions = {emotions:["Outrage", "Fear", "Repulsion"], color:"#900E00"}
 const inBetweenEmotions = {emotions:["Indifference", "Apprehension", "Confusion"], color:"#3D3D3D"}; 
 const hookedOntoEmotions = {emotions:["Amusement", "Excitement", "Anticipation"], color:"#7F6293"};
-const unxpectedEmotions = {emotions:["Relief", "Wonder", "Surprise"], color:"#227F10"};
+const unxpectedEmotions = {emotions:["Wonder", "Surprise"], color:"#227F10"};
 const sadEmotions = {emotions:["Despair", "Loss"], color:"#338399"};
-const relatableEmotions = {emotions:["Nostalgia", "Amorous"], color:"#F6CBD6"};
+const relatableEmotions = {emotions:["Nostalgia", "Amorous", "Relief"], color:"#F6CBD6"};
 
 const emotions = [negativeEmotions, inBetweenEmotions, hookedOntoEmotions, unxpectedEmotions, sadEmotions, relatableEmotions]; 
 
+
+const mapNumRange = (num, inMin, inMax, outMin, outMax) =>
+  ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 
 // groupedByYear contains books separated by the year i read them
 const groupedByYear = data.reduce((acc, d) => {
@@ -43,10 +44,12 @@ emotions.forEach(group => {
     });
 });
 
+const yearKeys = Object.keys(groupedByYear);
 
 // creating visualization
 const parentDiv = document.getElementById("parentDiv");
-const width = parentDiv.clientWidth;
+// const width = parentDiv.clientWidth;
+const width = colWidth*yearKeys.length;
 const height = parentDiv.clientHeight;
 
 // each datapoint will be represented by a rectangle. the color of the rectangle will be determined by the emotion i felt while reading the book. the height of the rectangle will be determined by the rating of the book. the width of the rectangle will be determined by it's length. 
@@ -59,53 +62,70 @@ const svg = d3.select('#parentDiv').append('svg')
 console.log(groupedByYear); 
 
 
-const yearKeys = Object.keys(groupedByYear);
-// let yOffset = 0;
 let xOffset = 0;
 
 yearKeys.forEach(year => {
     const yearData = groupedByYear[year];
-    // const groupHeight = 125; 
-    const groupWidth = 125; 
-    // let xOffset = 50; 
-    let yOffset = height - 50;
+    const groupWidth = colWidth; 
+    let yOffset = height - 20;
 
     svg.append('text')
-      // .attr('x', 0)  
-      // .attr('y', yOffset + groupHeight/2 - 25)  
       .text(year)
       .attr('fill', 'black') 
       .attr('font-size', '12px')
       .attr('dominant-baseline', 'top')
-      .attr('x', xOffset + groupWidth/2 -25)
+      .attr('x', xOffset + groupWidth/2 - colWidth/8)
       .attr('y', height); 
       
     yearData.forEach((d, i) => {
-      // const rectWidth = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
-      // const rectHeight  = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight); 
       const rectHeight = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
       const rectWidth = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight);
       console.log(d, rectHeight, yOffset);  
       const emotionColor = emotionColorMap[d.Emotion]; 
   
       svg.append('rect')
-        .attr('x', xOffset + 25 - rectWidth/2)
+        .attr('x', xOffset + colWidth/2 - rectWidth/2 )
         .attr('y', yOffset - rectHeight)
-        // .attr('x', xOffset)  
         .attr('width', rectWidth)
         .attr('height', rectHeight)
-        // .attr('y', yOffset + 25 - rectHeight / 2)
         .attr('fill', emotionColor); 
         
-  
-      // xOffset += rectWidth;
       yOffset -= rectHeight; 
     });
   
-    // yOffset += groupHeight;
     xOffset += groupWidth; 
   });
   
+
+
+  // SVG BORDERS 
+  svg.append('ellipse')
+   .attr('cx', 0) 
+   .attr('cy', height) // Centers the ellipse vertically
+   .attr('rx', 5) // Example radius along the x-axis
+   .attr('ry', 5) // Example radius along the y-axis
+   .attr('fill', "#900E00");
+ 
+  svg.append('ellipse')
+   .attr('cx', width) 
+   .attr('cy', height) // Centers the ellipse vertically
+   .attr('rx', 5) // Example radius along the x-axis
+   .attr('ry', 5) // Example radius along the y-axis
+   .attr('fill', "#900E00");
+
+  svg.append('ellipse')
+   .attr('cx', width) 
+   .attr('cy', 0) // Centers the ellipse vertically
+   .attr('rx', 5) // Example radius along the x-axis
+   .attr('ry', 5) // Example radius along the y-axis
+   .attr('fill', "#900E00");
+
+  svg.append('ellipse')
+   .attr('cx', 0) 
+   .attr('cy', 0) // Centers the ellipse vertically
+   .attr('rx', 5) // Example radius along the x-axis
+   .attr('ry', 5) // Example radius along the y-axis
+   .attr('fill', "#900E00");
 
 
   
