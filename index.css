@@ -18,7 +18,7 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem; 
+    /* gap: 0.5rem;  */
 }
 
 .header-container {
@@ -43,7 +43,7 @@ body{
 }
 
 .d3-container{
-    height: 90vh; 
+    height: calc(100vh - 2rem); 
 }
 
 @font-face {
