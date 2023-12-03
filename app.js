@@ -35,19 +35,55 @@ const mapNumRange = (num, inMin, inMax, outMin, outMax) =>
   ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 
 // shifts the book to the right to show it's being hovered on
-function moveObjectOnMouseOver() {
+function moveObjectOnMouseOver(svgWidth, svgHeight) {
   const book = d3.select(this);
+  let hiddenRectX, hiddenRectY; 
+  if(this.originalX + this.width + this.width / 3 + 200 > svgWidth){
+    hiddenRectX = this.originalX - 200; 
+  }
+  else{
+    hiddenRectX = this.originalX + this.width; 
+  }
+
+  if(this.originalY - 75 + 150 > svgHeight){
+    hiddenRectY = this.originalY - 150 + this.height; 
+  }
+  else if(this.originalY - 75 < 0){
+    hiddenRectY = this.originalY; 
+  }
+  else{
+    hiddenRectY = this.originalY - 75; 
+  }
+
+  this.hiddenRect = svg.append('rect')
+                          .attr('x', hiddenRectX)
+                          .attr('y', hiddenRectY)
+                          .attr('width', 200)
+                          .attr('height', 150)
+                          .style("fill", 'rgb(255, 255, 255)')
+                          .style("fill-opacity", '0.5')
+                          .style("stroke", 'rgb(255, 255, 255)')
+                          .style("stroke-opacity", '0.5')
+                          .style("mix-blend-mode", "luminosity")
+                          .style("stroke-width", 0.5)
+                          .attr("filter", "url(#drop-shadow)")
+                          .attr("rx", 5)
+                          .attr("ry", 5)
   book.transition()
-      .attr('transform', 'translate(' + this.width/3 + ', 0)'); 
-  this.hiddenRect.style("visibility", "visible");
+  .attr('transform', 'translate(' + this.width/3 + ', 0)'); 
+  this.hiddenRect.transition()       
+    .attr('transform', 'translate(' + this.width/3 + ', 0)')
+    .style("visibility", "visible");             
 }
 
 // returns the book to the original position on mouse out
 function returnObjectOnMouseOut() {
   const book = d3.select(this);
   book.transition()
-      .attr('transform', 'translate(0, 0)');
-  this.hiddenRect.style("visibility", "hidden");
+      .attr('transform', 'translate(0, 0)'); 
+  this.hiddenRect.transition()       
+    .attr('transform', 'translate(0, 0)')
+    .style("visibility", "hidden"); 
 }
 
 // DETERMINING WHAT LINES TO DRAW ON THE BOOK
@@ -186,6 +222,10 @@ filter.append("feMerge").selectAll("feMergeNode")
   .enter().append("feMergeNode")
   .attr("in", String);
 
+// const bookArr = {book:null, hiddenRect:null}; 
+const books = {}; 
+
+// creating stacks
 let xOffset = 0;
 yearKeys.forEach(year => {
     const yearData = groupedByYear[year];
@@ -207,32 +247,18 @@ yearKeys.forEach(year => {
       const rectY = yOffset - rectHeight; 
       const emotionColor = emotionColorMap[d.Emotion]; 
       const bookGroup = svg.append('g'); 
-      
-      const hiddenRect = bookGroup.append('rect')
-        .attr('x', rectX + rectWidth)
-        .attr('y', rectY)
-        .attr('width', 200)
-        .attr('height', 150)
-        .style("fill", 'rgb(255, 255,255)')
-        .style("fill-opacity", '0.5')
-        // .interpolate('colors', "['rgb(255, 255, 255)', greyLines]")
-        .style("stroke", 'rgb(255, 255,255)')
-        .style("stroke-opacity", '0.5')
-        .style("mix-blend-mode", "luminosity")
-        .style("stroke-width", 0.5)
-        .attr("filter", "url(#drop-shadow)")
-        .attr("rx", 5)
-        .attr("ry", 5)
-        .style("visibility", "hidden");
+      // bookArr[i].books.push(bookGroup); 
+      books.bookGroup = null;  
+      // const hiddenRect = bookGroup.append('rect'); 
 
       bookGroup 
-        .each(function() {
+        .each(function(d) {
             this.originalX = rectX;
             this.originalY = rectY; 
             this.height = rectHeight; 
             this.width = rectWidth; 
             this.color = emotionColor; 
-            this.hiddenRect = hiddenRect; 
+            this.hiddenRect = null; 
         });
 
       bookGroup.append('rect')
@@ -245,9 +271,9 @@ yearKeys.forEach(year => {
         .attr('ry', 2.5)
       
       drawLine(bookGroup);
-          
+
       bookGroup
-        .on('mouseover', moveObjectOnMouseOver)
+        .on('mouseover',function() { moveObjectOnMouseOver.call(this, width, height); })
         .on('mouseout', returnObjectOnMouseOut)
         .attr('cursor', 'pointer'); 
 
