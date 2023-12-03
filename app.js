@@ -34,43 +34,107 @@ emotions.forEach(group => {
 const mapNumRange = (num, inMin, inMax, outMin, outMax) =>
   ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 
+function calculateHiddenRectX(originalX, width, svgWidth, rectWidth) {
+    const overflowRight = originalX + width + width / 3 + rectWidth > svgWidth;
+    return overflowRight ? originalX - rectWidth : originalX + width;
+}
+
+function calculateHiddenRectY(originalY, height, svgHeight, rectHeight) {
+    const overflowBottom = originalY + rectHeight/2 + height / 2 > svgHeight;
+    const overflowTop = originalY - rectHeight/2 < 0;
+
+    if (overflowBottom) {
+        return originalY - rectHeight + height;
+    } else if (overflowTop) {
+        return originalY;
+    } else {
+        return originalY - rectHeight/2 + height / 2;
+    }
+}
+
+function wrapText(group, text, rectWidth, x, y, lineHeight) {
+  const words = text.split(/\s+/);
+  let line = '';
+  let lineNumber = 0;
+
+  words.forEach((word, index) => {
+      const testLine = line + word + " ";
+      const testWidth = getTextWidth(testLine, '14px karla'); // Example font, adjust as needed
+
+      if (testWidth > rectWidth && index > 0) {
+          group.append('text')
+              .attr('x', x )
+              .attr('y', y + (lineNumber * lineHeight))
+              .text(line)
+              .attr('fill', 'black')
+              .attr('font-size', '14px')
+              .attr('dominant-baseline', 'hanging'); 
+
+          line = word + " ";
+          lineNumber++;
+      } else {
+          line = testLine;
+      }
+  });
+
+  group.append('text') // Add the last line
+      .attr('x', x)
+      .attr('y', y + (lineNumber * lineHeight))
+      .text(line)
+      .attr('fill', 'black')
+      .attr('font-size', '14px')
+      .attr('dominant-baseline', 'hanging'); 
+}
+
+// Function to measure text width (you may need to adjust this based on your environment)
+function getTextWidth(text, font) {
+  // Create a temporary canvas
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  context.font = font;
+  const metrics = context.measureText(text);
+  return metrics.width;
+}
+
 // shifts the book to the right to show it's being hovered on
-function moveObjectOnMouseOver(svgWidth, svgHeight) {
+function moveObjectOnMouseOver(svgWidth, svgHeight, dataPoint) {
   const book = d3.select(this);
-  let hiddenRectX, hiddenRectY; 
-  if(this.originalX + this.width + this.width / 3 + 200 > svgWidth){
-    hiddenRectX = this.originalX - 200; 
-  }
-  else{
-    hiddenRectX = this.originalX + this.width; 
-  }
+  let hiddenRectWidth = 300; 
+  let hiddenRectHeight = 200; 
+  let margin = 10; 
+  let imgWidth = 110; 
+  let hiddenRectX = calculateHiddenRectX(this.originalX, this.width, svgWidth, hiddenRectWidth);
+  let hiddenRectY = calculateHiddenRectY(this.originalY, this.height, svgHeight, hiddenRectHeight);
+  console.log(dataPoint); 
+  this.hiddenRect = svg.append('g');
 
-  if(this.originalY - 75 + 150 > svgHeight){
-    hiddenRectY = this.originalY - 150 + this.height; 
-  }
-  else if(this.originalY - 75 < 0){
-    hiddenRectY = this.originalY; 
-  }
-  else{
-    hiddenRectY = this.originalY - 75; 
-  }
+  this.hiddenRect.append('rect')
+    .attr('x', hiddenRectX)
+    .attr('y', hiddenRectY)
+    .attr('width', hiddenRectWidth)
+    .attr('height', hiddenRectHeight)
+    .style("fill", 'rgb(255, 255, 255)')
+    .style("fill-opacity", '0.5')
+    .style("stroke", 'rgb(255, 255, 255)')
+    .style("stroke-opacity", '0.5')
+    .style("mix-blend-mode", "luminosity")
+    .style("stroke-width", 0.5)
+    .attr("filter", "url(#drop-shadow)")
+    .attr("rx", 5)
+    .attr("ry", 5); 
+  
+  this.hiddenRect.append('rect')
+    .attr('x', hiddenRectX + margin)
+    .attr('y', hiddenRectY + margin)
+    .attr('height', hiddenRectHeight - margin * 2)
+    .attr('width', imgWidth)
+    .style('fill', greyLines);
 
-  this.hiddenRect = svg.append('rect')
-                          .attr('x', hiddenRectX)
-                          .attr('y', hiddenRectY)
-                          .attr('width', 200)
-                          .attr('height', 150)
-                          .style("fill", 'rgb(255, 255, 255)')
-                          .style("fill-opacity", '0.5')
-                          .style("stroke", 'rgb(255, 255, 255)')
-                          .style("stroke-opacity", '0.5')
-                          .style("mix-blend-mode", "luminosity")
-                          .style("stroke-width", 0.5)
-                          .attr("filter", "url(#drop-shadow)")
-                          .attr("rx", 5)
-                          .attr("ry", 5)
+  wrapText(this.hiddenRect, dataPoint.Book, hiddenRectWidth - imgWidth - 4*margin, hiddenRectX + margin*3 + imgWidth, hiddenRectY + margin + 1, 13);
+
   book.transition()
-  .attr('transform', 'translate(' + this.width/3 + ', 0)'); 
+    .attr('transform', 'translate(' + this.width/3 + ', 0)'); 
+
   this.hiddenRect.transition()       
     .attr('transform', 'translate(' + this.width/3 + ', 0)')
     .style("visibility", "visible");             
@@ -259,6 +323,7 @@ yearKeys.forEach(year => {
             this.width = rectWidth; 
             this.color = emotionColor; 
             this.hiddenRect = null; 
+            this.d = d; 
         });
 
       bookGroup.append('rect')
@@ -273,7 +338,7 @@ yearKeys.forEach(year => {
       drawLine(bookGroup);
 
       bookGroup
-        .on('mouseover',function() { moveObjectOnMouseOver.call(this, width, height); })
+        .on('mouseover',function() { moveObjectOnMouseOver.call(this, width, height, d); })
         .on('mouseout', returnObjectOnMouseOut)
         .attr('cursor', 'pointer'); 
 
