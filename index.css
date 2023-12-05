@@ -2,7 +2,7 @@
     --body-font: "karla"; 
     --title-size: 1.5rem; 
     --body-size: 0.9rem; 
-    --webpage-background: rgba(243,241,234); 
+    --webpage-background: #E8EDED;  
 }
 
 body{
@@ -17,10 +17,31 @@ body{
     width: 100%;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     /* gap: 0.5rem;  */
 }
 
+#legend-container {
+    position: fixed;  /* Fixed position relative to the viewport */
+    top: 1rem;       /* Adjust as needed */
+    left: 1rem;     
+    z-index: 100;    /* Ensure it's above other content */
+}
+
+#legend-dropdown-container {
+    position: absolute;
+    /* Adjust the top and left values based on the SVG's position on your page */
+}
+
+#emotion-dropdown {
+    font-family: var(--body-font);
+    font-size: 14px;
+    border: none;
+    /* border-width: 0.5px; 
+    border-color: black; */
+    background-color: transparent;  
+}
+  
 .header-container {
     display: flex; 
     flex-direction:column; 
@@ -43,10 +64,17 @@ body{
 }
 
 .d3-container{
-    height: calc(100vh - 2rem); 
+    height: calc(100vh - 2rem);
 }
 
 @font-face {
     font-family: "karla";
-    src: url("./fonts/Karla/Karla-VariableFont_wght.ttf"); 
+    src: url("./fonts/Karla/Karla-VariableFont_wght.ttf");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "karla";
+    src: url("./fonts/Karla/Karla-Italic-VariableFont_wght.ttf"); 
+    font-style: italic;
 }
