@@ -18,12 +18,16 @@ const yellowColor = "#B77A01";
 const greenColor = "#6C8136"; 
 const blueColor = "#132762"; 
 const pinkColor = "#8A4252"; 
+const goldenColor = yellowColor;
 const fullPathData = "m775,305.4h-286.94L400,37.74l-88.06,267.66H25l234.7,164.69-91.41,267.66,231.7-165.88,231.7,165.88-91.58-267.66,234.88-164.69Z"; 
 const halfStarPathData =  "m400,407.9V37.74l-88.06,267.66H25l234.7,164.69-91.41,267.66,231.7-165.88h0v-163.97Z"; 
 const quarterStarPathData = "m311.94,305.4H25l234.7,164.69-91.41,267.66,231.7-165.88h0l-88.06-266.47h0Z"; 
 const threeQuarterStarPathData = "m775,305.4h-286.94L400,37.74l-88.06,267.66H25l234.7,164.69-91.41,267.66,231.7-165.88,140.12-101.78h0l234.88-164.69Z"; 
-const starHeight = 5; 
-const starWidth = 5; 
+const scaleFactor = 0.02;
+const starHeight = 800; 
+const starWidth = 800; 
+const scaledStarWidth = starWidth * scaleFactor; // Adjusted width for each scaled star
+const scaledStarHeight = starHeight * scaleFactor; 
 
 // EMOTIONS CATEGORIES
 const negativeEmotions = { attributes: ["Outrage", "Fear", "Repulsion"], color:redColor};
@@ -142,42 +146,44 @@ function wrapText(group, text, rectWidth, x, y, lineHeight, fontSize, fontStyle,
   return finalLineY; 
 }
 
-// function displayRating(svgContainer, rating, x, y) {
-//   const fullStars = Math.floor(rating);
-//   const partialStar = rating % 1; // This will be 0, 0.25, 0.5, or 0.75
-//   let currentX = x;
-//   const scaleFactor = 0.2;
-//   const scaledStarWidth = starWidth * scaleFactor; // Adjusted width for each scaled star
+function displayRating(svgContainer, rating, x, y) {
+  const fullStars = Math.floor(rating);
+  const partialStar = rating % 1; // This will be 0, 0.25, 0.5, or 0.75
+  let currentX = x;
 
-//   // Append full stars
-//   for (let i = 0; i < fullStars; i++) {
-//     svgContainer.append('path')
-//       .attr('d', fullPathData)
-//       .attr('transform', `scale(${scaleFactor}) translate(${currentX / scaleFactor}, ${y / scaleFactor})`);
-//     currentX += scaledStarWidth;
-//   }
+  // Append full stars
+  for (let i = 0; i < fullStars; i++) {
+    svgContainer.append('path') 
+      .attr('d', fullPathData)
+      .attr('transform', `translate(${currentX}, ${y}) scale(${scaleFactor})`)
+      .style('fill', `${goldenColor}`); 
+    currentX += scaledStarWidth;
+  }
 
-//   // Append partial star if needed
-//   if (partialStar > 0) {
-//     const partialPathData = getPartialStarPath(partialStar);
-//     svgContainer.append('path')
-//       .attr('d', partialPathData)
-//       .attr('transform', `scale(${scaleFactor}) translate(${currentX / scaleFactor}, ${y / scaleFactor})`);
-//   }
-// }
+  // Append partial star if needed
+  if (partialStar > 0) {
+    const partialPathData = getPartialStarPath(partialStar);
+    svgContainer.append('path') 
+    .attr('d', partialPathData)
+    .attr('transform', `translate(${currentX}, ${y}) scale(${scaleFactor})`)
+    .style('fill', `${goldenColor}`); 
+  }
+
+  return currentX; 
+}
 
 
-// function getPartialStarPath(partialValue) {
-//   // Return the path data based on the partial value
-//   if (partialValue === 0.25) {
-//     return quarterStarPathData; // Define this path data
-//   } else if (partialValue === 0.5) {
-//     return halfStarPathData; // Define this path data
-//   } else if (partialValue === 0.75) {
-//     return threeQuarterStarPathData; // Define this path data
-//   }
-//   return ""; // No partial star
-// }
+function getPartialStarPath(partialValue) {
+  // Return the path data based on the partial value
+  if (partialValue === 0.25) {
+    return quarterStarPathData; // Define this path data
+  } else if (partialValue === 0.5) {
+    return halfStarPathData; // Define this path data
+  } else if (partialValue === 0.75) {
+    return threeQuarterStarPathData; // Define this path data
+  }
+  return ""; // No partial star
+}
 
 
 // shifts the book to the right to show it's being hovered on
@@ -228,16 +234,18 @@ function moveObjectOnMouseOver(svg, svgWidth, svgHeight, dataPoint) {
 
   prevLineY = wrapText(this.hiddenRect, 'by ' + dataPoint.Author, textContainerWidth, textContainerX, prevLineY, lineSpacing, bodyFontSize, 'normal', 'black') + lineSpacing + 4;
 
-  // displayRating(this.hiddenRect, dataPoint.Rating, textContainerX, prevLineY);
-  // prevLineY += starHeight + lineSpacing; // Adjust for the height of the stars and add some spacing
+  const ratingX = displayRating(this.hiddenRect, dataPoint.Rating, textContainerX, prevLineY);
+  prevLineY += scaledStarHeight/1.5 + lineSpacing;
 
-  prevLineY = wrapText(this.hiddenRect, dataPoint.Rating + '/5; ' + dataPoint.Length + ' pages', textContainerWidth, textContainerX, prevLineY, lineSpacing, bodyFontSize, 'normal', mediumGrey) + lineSpacing + 4;
+  prevLineY = wrapText(this.hiddenRect, dataPoint.Length + ' pages', textContainerWidth, textContainerX, prevLineY, lineSpacing, bodyFontSize, 'normal', mediumGrey) + lineSpacing + 4;
 
   prevLineY = wrapText(this.hiddenRect, dataPoint.Genres, textContainerWidth, textContainerX, prevLineY, lineSpacing -1, bodyFontSize, 'normal', 'black') + lineSpacing + 4;
 
   prevLineY = wrapText(this.hiddenRect, dataPoint.Emotion, textContainerWidth, textContainerX, prevLineY, lineSpacing, bodyFontSize, 'normal', this.emotionColor) + lineSpacing + 4;
 
   prevLineY = wrapText(this.hiddenRect, 'Published: ' + dataPoint.Year_Published + '; Read: ' + dataPoint.Year_Read, textContainerWidth, textContainerX, prevLineY, lineSpacing, bodyFontSize, 'normal', mediumGrey) + lineSpacing;
+  
+  // prevLineY += starHeight + lineSpacing
 
   if(prevLineY > hiddenRectY + hiddenRectHeight){
     let newRectHeight = prevLineY - hiddenRectY + 2 * margin;
