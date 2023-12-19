@@ -1,5 +1,5 @@
 // parsing data
-const data = await d3.csv("./assets/dataset1.csv");
+const data = await d3.csv("./assets/dataset.csv");
 const maxLength = Math.max(...data.map(d => Number(d.Length)));
 const minLength = Math.min(...data.map(d => Number(d.Length)));
 const maxRating = Math.max(...data.map(d => Number(d.Rating)));
@@ -44,9 +44,9 @@ mapAttrColor(emotions, emotionColorMap);
 // GENRE CATEGORIES
 const fantasy = {attributes: ["Fantasy", "Urban Fantasy"], color: redColor}; 
 const thriller = {attributes: ["Mystery", "Crime"], color: greyColor}; 
-const dys = {attributes: ["Dystopia", "Thriller"], color:yellowColor}; 
+const dys = {attributes: ["Dystopia", "Thriller", "Adventure"], color:yellowColor}; 
 const ancient = {attributes: ["Mythology", "Retellings", "Historical Fiction"], color: greenColor}; 
-const misc = {attributes: ["Non-Fiction", "Adventure"], color: blueColor}; 
+const misc = {attributes: ["Non-Fiction"], color: blueColor}; 
 const romance = {attributes: ["Romance", "Chick Lit", "Contemporary"], color: pinkColor}; 
 
 const genres = [fantasy, thriller, dys, romance, misc, ancient];
@@ -172,7 +172,6 @@ function displayRating(svgContainer, rating, x, y) {
   return currentX; 
 }
 
-
 function getPartialStarPath(partialValue) {
   // Return the path data based on the partial value
   if (partialValue === 0.25) {
@@ -185,9 +184,7 @@ function getPartialStarPath(partialValue) {
   return ""; // No partial star
 }
 
-
 // shifts the book to the right to show it's being hovered on
-
 function moveObjectOnMouseOver(svg, svgWidth, svgHeight, dataPoint) {
   const book = d3.select(this);
   let hiddenRectWidth = 250;
@@ -241,7 +238,7 @@ function moveObjectOnMouseOver(svg, svgWidth, svgHeight, dataPoint) {
 
   prevLineY = wrapText(this.hiddenRect, dataPoint.Genres, textContainerWidth, textContainerX, prevLineY, lineSpacing -1, bodyFontSize, 'normal', 'black') + lineSpacing + 4;
 
-  prevLineY = wrapText(this.hiddenRect, dataPoint.Emotion, textContainerWidth, textContainerX, prevLineY, lineSpacing, bodyFontSize, 'normal', this.emotionColor) + lineSpacing + 4;
+  prevLineY = wrapText(this.hiddenRect, dataPoint.Emotion, textContainerWidth, textContainerX, prevLineY, lineSpacing, bodyFontSize, 'normal', this.rectColor) + lineSpacing + 4;
 
   prevLineY = wrapText(this.hiddenRect, 'Published: ' + dataPoint.Year_Published + '; Read: ' + dataPoint.Year_Read, textContainerWidth, textContainerX, prevLineY, lineSpacing, bodyFontSize, 'normal', mediumGrey) + lineSpacing;
   

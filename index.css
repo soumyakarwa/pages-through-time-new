@@ -69,12 +69,12 @@ body{
 
 @font-face {
     font-family: "karla";
-    src: url("./fonts/Karla/Karla-VariableFont_wght.ttf");
+    src: url("./assets/fonts/Karla/Karla-VariableFont_wght.ttf");
     font-style: normal;
 }
 
 @font-face {
     font-family: "karla";
-    src: url("./fonts/Karla/Karla-Italic-VariableFont_wght.ttf"); 
+    src: url("./assets/fonts/Karla/Karla-Italic-VariableFont_wght.ttf"); 
     font-style: italic;
 }
