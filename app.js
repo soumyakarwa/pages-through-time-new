@@ -10,6 +10,7 @@ const maxRectWidth = 40;
 const minRectWidth = 10;
 const margin = 8; 
 const colWidth = 140;
+const colHeight = 125; 
 const lightGrey = "#D9D9D9";
 const mediumGrey = "#8C8C8C";
 const redColor = "#700A18"; 
@@ -352,8 +353,10 @@ function createVisualization(chosenSort, chosenSortAttr){
   d3.select('#parentDiv').select('svg').remove();
 
   // creating visualization
-  const width = colWidth * yearKeys.length + margin;
-  const height = parentDiv.clientHeight;
+  // const width = colWidth * yearKeys.length + margin;
+  // const height = parentDiv.clientHeight;
+  const width = parentDiv.clientWidth; 
+  const height = colHeight * yearKeys.length + margin; 
 
   // VISUALIZATION
   const svg = d3.select('#parentDiv').append('svg')
@@ -396,24 +399,29 @@ function createVisualization(chosenSort, chosenSortAttr){
   const books = {};
 
   // creating stacks
-  let xOffset = 0;
+  // let xOffset = 0;
+  let yOffset = colHeight; 
   yearKeys.forEach(year => {
     const yearData = groupedByYear[year];
-    const groupWidth = colWidth;
-    let yOffset = height - 20;
+    // const groupWidth = colWidth;
+    const groupHeight = colHeight; 
+    let xOffset = 30; 
+    // let yOffset = height - 20;
 
     svg.append('text')
       .text(year)
       .attr('fill', 'black')
       .attr('font-size', '14px')
       .attr('dominant-baseline', 'top')
-      .attr('x', xOffset + groupWidth / 2 - colWidth / (groupWidth * 7/120))
-      .attr('y', height);
+      .attr('x', xOffset)
+      .attr('y', yOffset)
+      // .attr('x', xOffset + groupWidth / 2 - colWidth / (groupWidth * 7/120))
+      // .attr('y', height);
 
     yearData.forEach((d, i) => {
-      const rectHeight = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
-      const rectWidth = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight);
-      const rectX = xOffset + colWidth / 2 - rectWidth / 2;
+      const rectWidth = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
+      const rectHeight = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight);
+      const rectX = xOffset + colWidth/2;
       const rectY = yOffset - rectHeight;
       var rectColor; 
       switch(chosenSort){
@@ -455,10 +463,12 @@ function createVisualization(chosenSort, chosenSortAttr){
         .on('mouseout', returnObjectOnMouseOut)
         .attr('cursor', 'pointer');
 
-      yOffset -= rectHeight;
+      // yOffset -= rectHeight;
+      xOffset += rectWidth
     });
 
-    xOffset += groupWidth;
+    // xOffset += groupWidth;
+    yOffset += groupHeight; 
   });
 }
 
@@ -516,35 +526,35 @@ var selectedOption = "Emotion";
 var chosenSort = emotions; 
 var chosenSortAttr = emotionColorMap; 
 const options = ["Emotion", "Genre"];
-const dropdown = d3.select("#emotion-dropdown");
-  options.forEach(option => {
-    dropdown.append("option")
-      .attr("value", option)
-      .text(option);
-});
+// const dropdown = d3.select("#emotion-dropdown");
+//   options.forEach(option => {
+//     dropdown.append("option")
+//       .attr("value", option)
+//       .text(option);
+// });
 
-dropdown
-  .style('margin-top', 1.25*margin + 'px')
-  .style('margin-left', 8.5*margin + 'px');
+// dropdown
+//   .style('margin-top', 1.25*margin + 'px')
+//   .style('margin-left', 8.5*margin + 'px');
 
 createVisualization(chosenSort, chosenSortAttr); 
-createLegend(chosenSort); 
+// createLegend(chosenSort); 
 
-dropdown.on("change", function() {
-  selectedOption = d3.select(this).property("value");
-  switch(selectedOption){
-    case "Emotion":
-      chosenSort = emotions; 
-      chosenSortAttr = emotionColorMap; 
-      break; 
-    case "Genre":
-      chosenSort = genres; 
-      chosenSortAttr = genreColorMap; 
-      break;
-  }
-  createVisualization(chosenSort, chosenSortAttr); 
-  createLegend(chosenSort); 
-});
+// dropdown.on("change", function() {
+//   selectedOption = d3.select(this).property("value");
+//   switch(selectedOption){
+//     case "Emotion":
+//       chosenSort = emotions; 
+//       chosenSortAttr = emotionColorMap; 
+//       break; 
+//     case "Genre":
+//       chosenSort = genres; 
+//       chosenSortAttr = genreColorMap; 
+//       break;
+//   }
+//   createVisualization(chosenSort, chosenSortAttr); 
+//   createLegend(chosenSort); 
+// });
 
 // SVG BORDERS 
 // svg.append('ellipse')
