@@ -482,7 +482,7 @@ function createLegend(chosenSort){
     .attr("y", 0.5) 
     .attr("width", legendWidth)
     .attr("height", legendHeight -1)
-    .attr("fill", "#E8EDED") 
+    .attr("fill", "#F9F6EE") 
     .attr("stroke", "black") 
     .attr("stroke-width", 0.5); 
 
