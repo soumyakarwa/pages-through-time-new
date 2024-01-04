@@ -9,7 +9,7 @@ const minRectHeight = 40;
 const maxRectWidth = 40;
 const minRectWidth = 10;
 const margin = 8; 
-const colHeight = 155; 
+const colHeight = 145; 
 const lightGrey = "#D9D9D9";
 const mediumGrey = "#8C8C8C";
 const redColor = "#700A18"; 
@@ -251,12 +251,6 @@ function moveObjectOnMouseOver(svg, svgWidth, svgHeight, dataPoint) {
       .attr('height', newRectHeight);
   }
 
-  // book.transition()
-  //   .attr('transform', 'translate(' + this.width / 3 + ', 0)');
-
-  // this.hiddenRect.transition()
-  //   .attr('transform', 'translate(' + this.width / 3 + ', 0)')
-  //   .style("visibility", "visible");
   book.transition()
     .attr('transform', 'translate(0, ' + (-this.height / 4) + ')');
 
