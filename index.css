@@ -65,7 +65,7 @@ body{
 
 .d3-container{
     /* height: calc(100vh - 2rem); */
-    width: 100vw; 
+    width: calc(100vw - 2rem); 
 }
 
 @font-face {

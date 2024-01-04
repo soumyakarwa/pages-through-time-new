@@ -9,8 +9,7 @@ const minRectHeight = 40;
 const maxRectWidth = 40;
 const minRectWidth = 10;
 const margin = 8; 
-const colWidth = 140;
-const colHeight = 125; 
+const colHeight = 155; 
 const lightGrey = "#D9D9D9";
 const mediumGrey = "#8C8C8C";
 const redColor = "#700A18"; 
@@ -252,12 +251,19 @@ function moveObjectOnMouseOver(svg, svgWidth, svgHeight, dataPoint) {
       .attr('height', newRectHeight);
   }
 
+  // book.transition()
+  //   .attr('transform', 'translate(' + this.width / 3 + ', 0)');
+
+  // this.hiddenRect.transition()
+  //   .attr('transform', 'translate(' + this.width / 3 + ', 0)')
+  //   .style("visibility", "visible");
   book.transition()
-    .attr('transform', 'translate(' + this.width / 3 + ', 0)');
+    .attr('transform', 'translate(0, ' + (-this.height / 4) + ')');
 
   this.hiddenRect.transition()
-    .attr('transform', 'translate(' + this.width / 3 + ', 0)')
+    .attr('transform', 'translate(0, ' + (-this.height / 4) + ')')
     .style("visibility", "visible");
+
 }
 
 // returns the book to the original position on mouse out
@@ -353,8 +359,6 @@ function createVisualization(chosenSort, chosenSortAttr){
   d3.select('#parentDiv').select('svg').remove();
 
   // creating visualization
-  // const width = colWidth * yearKeys.length + margin;
-  // const height = parentDiv.clientHeight;
   const width = parentDiv.clientWidth; 
   const height = colHeight * yearKeys.length + margin; 
 
@@ -400,13 +404,11 @@ function createVisualization(chosenSort, chosenSortAttr){
 
   // creating stacks
   // let xOffset = 0;
-  let yOffset = colHeight; 
+  let yOffset = maxRectHeight; 
   yearKeys.forEach(year => {
     const yearData = groupedByYear[year];
-    // const groupWidth = colWidth;
     const groupHeight = colHeight; 
     let xOffset = 30; 
-    // let yOffset = height - 20;
 
     svg.append('text')
       .text(year)
@@ -414,14 +416,12 @@ function createVisualization(chosenSort, chosenSortAttr){
       .attr('font-size', '14px')
       .attr('dominant-baseline', 'top')
       .attr('x', xOffset)
-      .attr('y', yOffset)
-      // .attr('x', xOffset + groupWidth / 2 - colWidth / (groupWidth * 7/120))
-      // .attr('y', height);
+      .attr('y', yOffset + 15)
 
     yearData.forEach((d, i) => {
       const rectWidth = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
       const rectHeight = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight);
-      const rectX = xOffset + colWidth/2;
+      const rectX = xOffset + colHeight/3;
       const rectY = yOffset - rectHeight;
       var rectColor; 
       switch(chosenSort){
