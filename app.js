@@ -404,14 +404,6 @@ function createVisualization(chosenSort, chosenSortAttr){
     const groupHeight = colHeight; 
     let xOffset = 30; 
 
-    svg.append('text')
-      .text(year)
-      .attr('fill', 'black')
-      .attr('font-size', '14px')
-      .attr('dominant-baseline', 'top')
-      .attr('x', xOffset)
-      .attr('y', yOffset + 15)
-
     yearData.forEach((d, i) => {
       const rectWidth = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
       const rectHeight = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight);
@@ -457,11 +449,23 @@ function createVisualization(chosenSort, chosenSortAttr){
         .on('mouseout', returnObjectOnMouseOut)
         .attr('cursor', 'pointer');
 
-      // yOffset -= rectHeight;
-      xOffset += rectWidth
+      xOffset += rectWidth 
     });
 
-    // xOffset += groupWidth;
+    svg.append('rect')
+      .attr('x', 30 + colHeight/3 - 7.5)
+      .attr('y', yOffset)
+      .attr('width', xOffset - 30 + 15)
+      .attr('height', 3)
+      .attr('fill', 'black')
+
+    svg.append('text')
+      .text(year)
+      .attr('fill', 'black')
+      .attr('font-size', '14px')
+      .attr('x', (xOffset + colHeight/3)/2 + maxRectWidth/2)
+      .attr('y', yOffset + 20)
+
     yOffset += groupHeight; 
   });
 }
@@ -532,6 +536,7 @@ const options = ["Emotion", "Genre"];
 //   .style('margin-left', 8.5*margin + 'px');
 
 createVisualization(chosenSort, chosenSortAttr); 
+
 // createLegend(chosenSort); 
 
 // dropdown.on("change", function() {
