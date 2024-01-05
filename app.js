@@ -399,11 +399,10 @@ function createVisualization(chosenSort, chosenSortAttr){
   // creating stacks
   // let xOffset = 0;
   let yOffset = maxRectHeight; 
+  let xOffset = 0; 
   yearKeys.forEach(year => {
     const yearData = groupedByYear[year];
     const groupHeight = colHeight; 
-    let xOffset = 30; 
-
     yearData.forEach((d, i) => {
       const rectWidth = mapNumRange(d.Length, minLength, maxLength, minRectWidth, maxRectWidth);
       const rectHeight = mapNumRange(d.Rating, minRating, maxRating, minRectHeight, maxRectHeight);
@@ -453,9 +452,9 @@ function createVisualization(chosenSort, chosenSortAttr){
     });
 
     svg.append('rect')
-      .attr('x', 30 + colHeight/3 - 7.5)
+      .attr('x', colHeight/3 - 7.5)
       .attr('y', yOffset)
-      .attr('width', xOffset - 30 + 15)
+      .attr('width', xOffset+ 15)
       .attr('height', 3)
       .attr('fill', 'black')
 
@@ -463,10 +462,18 @@ function createVisualization(chosenSort, chosenSortAttr){
       .text(year)
       .attr('fill', 'black')
       .attr('font-size', '14px')
-      .attr('x', (xOffset + colHeight/3)/2 + maxRectWidth/2)
+      .attr('x', xOffset)
       .attr('y', yOffset + 20)
 
-    yOffset += groupHeight; 
+    if(xOffset > width){
+      yOffset += groupHeight; 
+      xOffset = 0;
+    }
+    else{
+      xOffset += 50; 
+    }
+
+    // yOffset += groupHeight; 
   });
 }
 
