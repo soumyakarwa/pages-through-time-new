@@ -1,4 +1,5 @@
-// parsing data
+import { drawLine } from "./drawLine.js";
+
 const data = await d3.csv("./assets/dataset.csv");
 const maxLength = Math.max(...data.map(d => Number(d.Length)));
 const minLength = Math.min(...data.map(d => Number(d.Length)));
@@ -270,87 +271,10 @@ function returnObjectOnMouseOut() {
     .style("visibility", "hidden");
 }
 
-// determines what line illustration to add to the book
-function drawLine(book) {
-  let combination = Math.floor(Math.random() * 3);
-
-  book.each(function () {
-    // Access the properties of the DOM element
-    const groupElement = d3.select(this);
-    const originalX = this.originalX;
-    const originalY = this.originalY;
-    const width = this.width;
-    const height = this.height;
-    const lineColor = this.color == "#F6CBD6" ? "#BFBFBF" : lightGrey;
-
-
-    switch (combination) {
-      case 0:
-        groupElement.append('line')
-          .attr('x1', originalX + 1)
-          .attr('y1', originalY + 3)
-          .attr('x2', originalX + width - 1)
-          .attr('y2', originalY + 3)
-          .attr('stroke', lineColor)
-          .attr('stroke-width', 0.5);
-
-        groupElement.append('line')
-          .attr('x1', originalX + 1)
-          .attr('y1', originalY + height - 3)
-          .attr('x2', originalX + width - 1)
-          .attr('y2', originalY + height - 3)
-          .attr('stroke', lineColor)
-          .attr('stroke-width', 0.5);
-        break;
-      case 1:
-        groupElement.append('line')
-          .attr('x1', originalX + width / 9)
-          .attr('y1', originalY)
-          .attr('x2', originalX + width / 9)
-          .attr('y2', originalY + height)
-          .attr('stroke', lineColor)
-          .attr('stroke-width', 0.5);
-
-        groupElement.append('line')
-          .attr('x1', originalX + width / 9 + 3)
-          .attr('y1', originalY)
-          .attr('x2', originalX + width / 9 + 3)
-          .attr('y2', originalY + height)
-          .attr('stroke', lineColor)
-          .attr('stroke-width', 0.5);
-
-        groupElement.append('line')
-          .attr('x1', originalX + width - width / 9 - 3)
-          .attr('y1', originalY)
-          .attr('x2', originalX + width - width / 9 - 3)
-          .attr('y2', originalY + height)
-          .attr('stroke', lineColor)
-          .attr('stroke-width', 0.5);
-
-        groupElement.append('line')
-          .attr('x1', originalX + width - width / 9 - 6)
-          .attr('y1', originalY)
-          .attr('x2', originalX + width - width / 9 - 6)
-          .attr('y2', originalY + height)
-          .attr('stroke', lineColor)
-          .attr('stroke-width', 0.5);
-
-        break;
-      case 2:
-        groupElement.append('line')
-          .attr('x1', originalX + width / 10)
-          .attr('y1', originalY)
-          .attr('x2', originalX + width / 10)
-          .attr('y2', originalY + height)
-          .attr('stroke', lineColor)
-          .attr('stroke-width', 2);
-        break;
-    }
-  });
-}
-
 function createVisualization(chosenSort, chosenSortAttr){
   d3.select('#parentDiv').select('svg').remove();
+
+  console.log(chosenSort); 
 
   // creating visualization
   const width = parentDiv.clientWidth; 
@@ -362,7 +286,7 @@ function createVisualization(chosenSort, chosenSortAttr){
     .attr('height', height);
 
   // glassmorphism filter
-  const defs = svg.append("defs");
+      const defs = svg.append("defs");  
   const filter = defs.append("filter")
     .attr("id", "drop-shadow")
     .attr("height", "130%");
@@ -397,7 +321,6 @@ function createVisualization(chosenSort, chosenSortAttr){
   const books = {};
 
   // creating stacks
-  // let xOffset = 0;
   let yOffset = maxRectHeight; 
   let xOffset = 0; 
   yearKeys.forEach(year => {
@@ -411,6 +334,7 @@ function createVisualization(chosenSort, chosenSortAttr){
       var rectColor; 
       switch(chosenSort){
         case emotions:
+            console.log("chosenSort is emotions")
           var rectColor = chosenSortAttr[d.Emotion];
           break; 
         case genres:
@@ -441,7 +365,7 @@ function createVisualization(chosenSort, chosenSortAttr){
         .attr('rx', 2.5)
         .attr('ry', 2.5)
 
-      drawLine(bookGroup);
+      drawLine(bookGroup, lightGrey);
 
       bookGroup
         .on('mouseover', function () { moveObjectOnMouseOver.call(this, svg, width, height, d); })
