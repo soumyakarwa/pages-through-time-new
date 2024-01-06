@@ -5,9 +5,14 @@ const threeQuarterStarPathData = "m775,305.4h-286.94L400,37.74l-88.06,267.66H25l
 const scaleFactor = 0.02;
 const starHeight = 800; 
 const starWidth = 800; 
-const scaledStarWidth = starWidth * scaleFactor; // Adjusted width for each scaled star
+const scaledStarWidth = starWidth * scaleFactor;
 const scaledStarHeight = starHeight * scaleFactor; 
 
+/**
+ * 
+ * @param {*} partialValue: if the book has a partial rating (.5, 0.25, 0.75)
+ * @returns the svg path that links to the partial star i.e. 0.25, 0.5, 0.75
+ */
 function getPartialStarPath(partialValue) {
     // Return the path data based on the partial value
     if (partialValue === 0.25) {
@@ -20,10 +25,23 @@ function getPartialStarPath(partialValue) {
     return ""; // No partial star
 }
 
+/**
+ * 
+ * @returns adjusted dimensions for each svg star
+ */
 export function getScaledStarDimensions(){
     return [scaledStarWidth, scaledStarHeight]; 
 }
 
+/**
+ * This fuction draws the book's rating on the glassmorphic card
+ * @param {*} svgContainer 
+ * @param {*} rating: the book's rating
+ * @param {*} x: starting x position
+ * @param {*} y: starting y position
+ * @param {*} clr: color of the star
+ * @returns the x position of the last star in the rating
+ */
 export function displayRating(svgContainer, rating, x, y, clr) {
     const fullStars = Math.floor(rating);
     const partialStar = rating % 1; // This will be 0, 0.25, 0.5, or 0.75

@@ -1,6 +1,7 @@
 /**
- * drawLine.js draws lines on each book to add definition to the spine of the book. 
- * Currently, there are three different types of lines. 
+ * This function draws lines on each book spine to add some dimension. 
+ * @param {*} book: the book on which the lines are being drawn
+ * @param {*} lightGrey: a possibe color of the lines
  */
 export function drawLine(book, lightGrey) {
     let combination = Math.floor(Math.random() * 3);

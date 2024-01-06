@@ -1,3 +1,10 @@
+/**
+ * This function creates a glassmorphismFilter that is used as a design choice for 
+ * the card that shows upon hovering on a certain book. 
+ * @param {*} svg: adding the filter to the svg 
+ * @param {*} clr: lightGrey
+ * @returns 
+ */
 export function glassmorphismFilter(svg, clr){
     const defs = svg.append("defs");
 
