@@ -192,6 +192,9 @@ export function moveObjectOnMouseOver(svg, svgWidth, svgHeight, dataPoint) {
     .style("visibility", "visible");
 }
 
+/**
+ * Returns the object to the original position
+ */
 export function returnObjectOnMouseOut() {
   const book = d3.select(this);
   book.transition().attr("transform", "translate(0, 0)");

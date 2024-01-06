@@ -4,6 +4,13 @@ import { glassmorphismFilter } from "./glassmorphismFilter.js";
 import { moveObjectOnMouseOver, returnObjectOnMouseOut } from "./hiddenCard.js";
 import { mapNumRange } from "./util.js";
 
+/**
+ *
+ * @param {*} dataset
+ * @param {*} keys: years
+ * @param {*} chosenSort: books are to be colored by which attribute
+ * @param {*} chosenSortAttr: corresponding color
+ */
 export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
   d3.select("#parentDiv").select("svg").remove();
 

@@ -4,9 +4,9 @@ import { createLegend } from "./legend.js";
 import * as Constants from "./constants.js";
 
 const emotionColorMap = {};
-mapAttrColor(Constants.emotions, emotionColorMap);
-
 const genreColorMap = {};
+
+mapAttrColor(Constants.emotions, emotionColorMap);
 mapAttrColor(Constants.genres, genreColorMap);
 
 // DATA PROCESSING
@@ -23,8 +23,8 @@ const groupedByYear = Constants.data.reduce((acc, d) => {
 const yearKeys = Object.keys(groupedByYear);
 
 var selectedOption = "Emotion";
-var chosenSort = Constants.emotions;
-var chosenSortAttr = emotionColorMap;
+var chosenSort = Constants.genres;
+var chosenSortAttr = genreColorMap;
 const options = ["Emotion", "Genre"];
 
 createVisualization(groupedByYear, yearKeys, chosenSort, chosenSortAttr);

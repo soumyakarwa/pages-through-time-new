@@ -1,4 +1,5 @@
 /**
+ * mapNumRange()
  * This function extrapolates a number in a certain range to another range.
  * @param {*} num: number
  * @param {*} inMin: existing minimum
@@ -11,6 +12,7 @@ export function mapNumRange(num, inMin, inMax, outMin, outMax) {
 }
 
 /**
+ * mapAttrColor
  * This function maps colors to categories
  * @param {*} inputArr: All the categories of a list
  * @param {*} outputObj: Object that contains the category with the associated color
@@ -26,7 +28,7 @@ export function mapAttrColor(inputArr, outputObj) {
 }
 
 /**
- *
+ * calculateHiddenRectX
  * @param {*} originalX: Book X Position
  * @param {*} width: Book Width
  * @param {*} svgWidth: SVG Width
@@ -40,7 +42,7 @@ export function calculateHiddenRectX(originalX, width, svgWidth, rectWidth) {
 }
 
 /**
- *
+ * calculateHiddenRectY
  * @param {*} originalY: Book Y Position
  * @param {*} height: Book Height
  * @param {*} svgHeight: SVG Height
@@ -62,7 +64,7 @@ export function calculateHiddenRectY(originalY, height, svgHeight, rectHeight) {
 }
 
 /**
- *
+ * getTextWidth
  * @param {*} text
  * @param {*} fontSize
  * @returns text width
@@ -78,6 +80,7 @@ function getTextWidth(text, fontSize) {
 }
 
 /**
+ * wrapText
  * Wraps text in case text is moving out of the glassmorphic card
  * @param {*} group
  * @param {*} text
