@@ -24,3 +24,63 @@ export const maxRectWidth = 40;
 export const minRectWidth = 10;
 
 export const colHeight = 145;
+
+// EMOTIONS CATEGORIES
+const negativeEmotions = {
+  attributes: ["Outrage", "Fear", "Repulsion"],
+  color: redColor,
+};
+const inBetweenEmotions = {
+  attributes: ["Indifference", "Apprehension", "Confusion"],
+  color: greyColor,
+};
+const hookedOntoEmotions = {
+  attributes: ["Amusement", "Excitement"],
+  color: yellowColor,
+};
+const unxpectedEmotions = {
+  attributes: ["Wonder", "Surprise", "Anticipation"],
+  color: greenColor,
+};
+const sadEmotions = {
+  attributes: ["Despair", "Loss"],
+  color: blueColor,
+};
+const relatableEmotions = {
+  attributes: ["Nostalgia", "Amorous", "Relief"],
+  color: pinkColor,
+};
+
+export const emotions = [
+  negativeEmotions,
+  inBetweenEmotions,
+  hookedOntoEmotions,
+  unxpectedEmotions,
+  sadEmotions,
+  relatableEmotions,
+];
+
+// GENRE CATEGORIES
+const fantasy = {
+  attributes: ["Fantasy", "Urban Fantasy"],
+  color: redColor,
+};
+const thriller = {
+  attributes: ["Mystery", "Crime"],
+  color: greyColor,
+};
+const dys = {
+  attributes: ["Dystopia", "Thriller", "Adventure"],
+  color: yellowColor,
+};
+const ancient = {
+  attributes: ["Mythology", "Retellings", "Historical Fiction"],
+  color: greenColor,
+};
+const misc = { attributes: ["Non-Fiction"], color: blueColor };
+const romance = {
+  attributes: ["Romance", "Chick Lit", "Contemporary"],
+  color: pinkColor,
+};
+
+export const genres = [fantasy, thriller, dys, romance, misc, ancient];
