@@ -1,5 +1,6 @@
 import { drawLine } from "./drawLine.js";
 import { displayRating, getScaledStarDimensions } from "./displayRating.js";
+import { glassmorphismFilter } from "./glassmorphismFilter.js";
 
 const data = await d3.csv("./assets/dataset.csv");
 const maxLength = Math.max(...data.map(d => Number(d.Length)));
@@ -21,15 +22,6 @@ const greenColor = "#6C8136";
 const blueColor = "#132762"; 
 const pinkColor = "#8A4252"; 
 const goldenColor = yellowColor;
-// const fullPathData = "m775,305.4h-286.94L400,37.74l-88.06,267.66H25l234.7,164.69-91.41,267.66,231.7-165.88,231.7,165.88-91.58-267.66,234.88-164.69Z"; 
-// const halfStarPathData =  "m400,407.9V37.74l-88.06,267.66H25l234.7,164.69-91.41,267.66,231.7-165.88h0v-163.97Z"; 
-// const quarterStarPathData = "m311.94,305.4H25l234.7,164.69-91.41,267.66,231.7-165.88h0l-88.06-266.47h0Z"; 
-// const threeQuarterStarPathData = "m775,305.4h-286.94L400,37.74l-88.06,267.66H25l234.7,164.69-91.41,267.66,231.7-165.88,140.12-101.78h0l234.88-164.69Z"; 
-// const scaleFactor = 0.02;
-// const starHeight = 800; 
-// const starWidth = 800; 
-// const scaledStarWidth = starWidth * scaleFactor; // Adjusted width for each scaled star
-// const scaledStarHeight = starHeight * scaleFactor; 
 
 // EMOTIONS CATEGORIES
 const negativeEmotions = { attributes: ["Outrage", "Fear", "Repulsion"], color:redColor};
@@ -237,8 +229,6 @@ function returnObjectOnMouseOut() {
 function createVisualization(chosenSort, chosenSortAttr){
   d3.select('#parentDiv').select('svg').remove();
 
-  console.log(chosenSort); 
-
   // creating visualization
   const width = parentDiv.clientWidth; 
   const height = colHeight * yearKeys.length + margin; 
@@ -248,38 +238,7 @@ function createVisualization(chosenSort, chosenSortAttr){
     .attr('width', width)
     .attr('height', height);
 
-  // glassmorphism filter
-      const defs = svg.append("defs");  
-  const filter = defs.append("filter")
-    .attr("id", "drop-shadow")
-    .attr("height", "130%");
-
-  filter.append("feGaussianBlur")
-    .attr("in", "SourceAlpha")
-    .attr("stdDeviation", 5)
-    .attr("result", "blur");
-
-  filter.append("feOffset")
-    .attr("in", "blur")
-    .attr("dx", 0)
-    .attr("dy", 8)
-    .attr("result", "offsetBlur");
-
-  filter.append("feFlood")
-    .attr("flood-color", lightGrey)
-    .attr('floop-opacity', '0.9')
-    .attr("result", "color");
-
-  filter.append("feComposite")
-    .attr("in", "color")
-    .attr("in2", "offsetBlur")
-    .attr("operator", "in")
-    .attr("result", "shadow");
-
-  filter.append("feMerge").selectAll("feMergeNode")
-    .data(["shadow", "SourceGraphic"])
-    .enter().append("feMergeNode")
-    .attr("in", String);
+  const filterId = glassmorphismFilter(svg, lightGrey); 
 
   const books = {};
 
