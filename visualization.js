@@ -1,5 +1,5 @@
 import * as Constants from "./constants.js";
-import { drawLine } from "./drawLine.js";
+import { drawLine, drawShelfLine } from "./illustrations.js";
 import { glassmorphismFilter } from "./glassmorphismFilter.js";
 import { moveObjectOnMouseOver, returnObjectOnMouseOut } from "./hiddenCard.js";
 import { mapNumRange } from "./util.js";
@@ -14,45 +14,39 @@ import { mapNumRange } from "./util.js";
 export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
   d3.select("#parentDiv").select("svg").remove();
 
-  // creating visualization
+  // dimemsions of the svg
   const width = parentDiv.clientWidth;
-  const height = Constants.colHeight * keys.length + Constants.margin;
+  const height = parentDiv.clientHeight;
 
-  // VISUALIZATION
   const svg = d3
     .select("#parentDiv")
     .append("svg")
     .attr("width", width)
     .attr("height", height);
 
+  // glassmorphic filter
   const filterId = glassmorphismFilter(svg, Constants.lightGrey);
 
-  const books = {};
+  // initial x and y position for the shelf
+  let shelfX = 0;
+  let shelfY = Constants.colHeight + Constants.maxRectHeight / 4;
 
-  // creating stacks
-  let yOffset = Constants.colHeight + Constants.maxRectHeight / 4;
-  let xOffset = 0;
+  // keys refers to the year
   keys.forEach((year) => {
-    const yearData = dataset[year];
-    const groupHeight = Constants.colHeight;
+    // books in every year
+    const booksInEveryYear = dataset[year];
 
-    svg
-      .append("rect")
-      .attr("x", xOffset)
-      .attr("y", yOffset)
-      .attr("width", xOffset + 15)
-      .attr("height", 3)
-      .attr("fill", "black");
-
+    var booksInEveryYearInitialX = shelfX;
+    // year label
     svg
       .append("text")
       .text(year)
       .attr("fill", "black")
       .attr("font-size", "14px")
-      .attr("x", xOffset)
-      .attr("y", yOffset + 20);
+      .attr("x", shelfX)
+      .attr("y", shelfY + 20);
 
-    yearData.forEach((d, i) => {
+    booksInEveryYear.forEach((d) => {
       const rectWidth = mapNumRange(
         d.Length,
         Constants.minLength,
@@ -67,8 +61,41 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
         Constants.minRectHeight,
         Constants.maxRectHeight
       );
-      const rectX = xOffset;
-      const rectY = yOffset - rectHeight;
+
+      /**
+       * if the book in the booksInEveryYear is moving out of the svg, move the book to the next line
+       * and add a text label
+       */
+      if (shelfX + rectWidth + 1 > width) {
+        drawShelfLine(
+          svg,
+          booksInEveryYearInitialX,
+          shelfY,
+          shelfX,
+          2,
+          "black",
+          6
+        );
+
+        shelfX = 0;
+        shelfY += Constants.colHeight;
+        booksInEveryYearInitialX = shelfX;
+        svg
+          .append("text")
+          .text(year)
+          .attr("fill", "black")
+          .attr("font-size", "14px")
+          .attr("x", shelfX)
+          .attr("y", shelfY + 20);
+      }
+
+      const rectX = shelfX;
+      const rectY = shelfY - rectHeight;
+
+      if (shelfY > height) {
+        height += Constants.colHeight;
+      }
+
       var rectColor;
       switch (chosenSort) {
         case Constants.emotions:
@@ -78,8 +105,9 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
           var rectColor = chosenSortAttr[d.Prominent_Genre];
           break;
       }
+
       const bookGroup = svg.append("g");
-      books.bookGroup = null;
+      Constants.books.bookGroup = null;
 
       bookGroup.each(function (d) {
         this.originalX = rectX;
@@ -111,16 +139,16 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
         .on("mouseout", returnObjectOnMouseOut)
         .attr("cursor", "pointer");
 
-      xOffset += rectWidth;
+      shelfX += rectWidth;
     });
 
-    if (xOffset > width) {
-      yOffset += groupHeight;
-      xOffset = 0;
-    } else {
-      xOffset += 50;
-    }
+    drawShelfLine(svg, booksInEveryYearInitialX, shelfY, shelfX, 2, "black", 6);
 
-    // yOffset += groupHeight;
+    if (shelfX > width) {
+      shelfY += groupHeight;
+      shelfX = 0;
+    } else {
+      shelfX += 50;
+    }
   });
 }

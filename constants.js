@@ -84,3 +84,5 @@ const romance = {
 };
 
 export const genres = [fantasy, thriller, dys, romance, misc, ancient];
+
+export const books = {};

@@ -1,81 +1,81 @@
-:root{
-    --body-font: "karla"; 
-    --title-size: 1.5rem; 
-    --body-size: 0.9rem; 
-    --webpage-background: #F9F6EE;  
+:root {
+  --body-font: "karla";
+  --title-size: 1.5rem;
+  --body-size: 0.9rem;
+  --webpage-background: #f9f6ee;
 }
 
-body{
-    margin: 1rem;
-    font-family: var(--body-font); 
-    background-color: var(--webpage-background);
+body {
+  margin: 1rem;
+  font-family: var(--body-font);
+  background-color: var(--webpage-background);
 }
 
 .body-container {
-    display: flex;
-    height: 100%; 
-    width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    /* gap: 0.5rem;  */
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  /* gap: 0.5rem;  */
 }
 
 #legend-container {
-    position: fixed;  /* Fixed position relative to the viewport */
-    top: 1rem;       /* Adjust as needed */
-    left: 1rem;     
-    z-index: 100;    /* Ensure it's above other content */
+  position: fixed; /* Fixed position relative to the viewport */
+  top: 1rem; /* Adjust as needed */
+  left: 1rem;
+  z-index: 100; /* Ensure it's above other content */
 }
 
 #legend-dropdown-container {
-    position: absolute;
-    /* Adjust the top and left values based on the SVG's position on your page */
+  position: absolute;
+  /* Adjust the top and left values based on the SVG's position on your page */
 }
 
 #emotion-dropdown {
-    font-family: var(--body-font);
-    font-size: 14px;
-    border: none;
-    /* border-width: 0.5px; 
+  font-family: var(--body-font);
+  font-size: 14px;
+  border: none;
+  /* border-width: 0.5px; 
     border-color: black; */
-    background-color: transparent;  
+  background-color: transparent;
 }
-  
+
 .header-container {
-    display: flex; 
-    flex-direction:column; 
-    align-items: left; 
+  display: flex;
+  flex-direction: column;
+  align-items: left;
 }
 
 .header-container h1 {
-    margin: 0; 
-    font-size: var(--title-size); 
-    font-style: normal;
-    font-weight:normal; 
-    text-align: right;
+  margin: 0;
+  font-size: var(--title-size);
+  font-style: normal;
+  font-weight: normal;
+  text-align: right;
 }
 
 .header-container p {
-    margin: 0; 
-    font-size: var(--body-size); 
-    font-style: normal;
-    padding-left:0.5rem; 
+  margin: 0;
+  font-size: var(--body-size);
+  font-style: normal;
+  padding-left: 0.5rem;
 }
 
-.d3-container{
-    /* height: calc(100vh - 2rem); */
-    width: calc(100vw - 2rem); 
-}
-
-@font-face {
-    font-family: "karla";
-    src: url("./assets/fonts/Karla/Karla-VariableFont_wght.ttf");
-    font-style: normal;
+.d3-container {
+  height: calc(100vh - 2rem);
+  width: calc(100vw - 2rem);
 }
 
 @font-face {
-    font-family: "karla";
-    src: url("./assets/fonts/Karla/Karla-Italic-VariableFont_wght.ttf"); 
-    font-style: italic;
+  font-family: "karla";
+  src: url("./assets/fonts/Karla/Karla-VariableFont_wght.ttf");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "karla";
+  src: url("./assets/fonts/Karla/Karla-Italic-VariableFont_wght.ttf");
+  font-style: italic;
 }
