@@ -1,5 +1,5 @@
 import * as Constants from "./constants.js";
-import { drawLine, drawShelfLine } from "./illustrations.js";
+import { drawLine, drawShelfLine, drawLabel } from "./illustrations.js";
 import { glassmorphismFilter } from "./glassmorphismFilter.js";
 import { moveObjectOnMouseOver, returnObjectOnMouseOut } from "./hiddenCard.js";
 import { mapNumRange } from "./util.js";
@@ -14,6 +14,7 @@ import { mapNumRange } from "./util.js";
 export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
   d3.select("#parentDiv").select("svg").remove();
 
+  const offset = 6;
   // dimemsions of the svg
   const width = parentDiv.clientWidth;
   const height = parentDiv.clientHeight;
@@ -28,7 +29,7 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
   const filterId = glassmorphismFilter(svg, Constants.lightGrey);
 
   // initial x and y position for the shelf
-  let shelfX = 0;
+  let shelfX = offset;
   let shelfY = Constants.colHeight + Constants.maxRectHeight / 4;
 
   // keys refers to the year
@@ -38,13 +39,13 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
 
     var booksInEveryYearInitialX = shelfX;
     // year label
-    svg
-      .append("text")
-      .text(year)
-      .attr("fill", "black")
-      .attr("font-size", "14px")
-      .attr("x", shelfX)
-      .attr("y", shelfY + 20);
+    // svg
+    //   .append("text")
+    //   .text(year)
+    //   .attr("fill", "black")
+    //   .attr("font-size", "14px")
+    //   .attr("x", shelfX)
+    //   .attr("y", shelfY + 20);
 
     booksInEveryYear.forEach((d) => {
       const rectWidth = mapNumRange(
@@ -66,7 +67,9 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
        * if the book in the booksInEveryYear is moving out of the svg, move the book to the next line
        * and add a text label
        */
-      if (shelfX + rectWidth + 1 > width) {
+      if (shelfX + rectWidth + offset > width) {
+        drawLabel(svg, year, booksInEveryYearInitialX, shelfY + 20, shelfX, 14);
+
         drawShelfLine(
           svg,
           booksInEveryYearInitialX,
@@ -74,19 +77,20 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
           shelfX,
           2,
           "black",
-          6
+          offset
         );
 
-        shelfX = 0;
+        shelfX = offset;
         shelfY += Constants.colHeight;
         booksInEveryYearInitialX = shelfX;
-        svg
-          .append("text")
-          .text(year)
-          .attr("fill", "black")
-          .attr("font-size", "14px")
-          .attr("x", shelfX)
-          .attr("y", shelfY + 20);
+
+        // svg
+        //   .append("text")
+        //   .text(year)
+        //   .attr("fill", "black")
+        //   .attr("font-size", "14px")
+        //   .attr("x", shelfX)
+        //   .attr("y", shelfY + 20);
       }
 
       const rectX = shelfX;
@@ -142,7 +146,17 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
       shelfX += rectWidth;
     });
 
-    drawShelfLine(svg, booksInEveryYearInitialX, shelfY, shelfX, 2, "black", 6);
+    drawShelfLine(
+      svg,
+      booksInEveryYearInitialX,
+      shelfY,
+      shelfX,
+      2,
+      "black",
+      offset
+    );
+
+    drawLabel(svg, year, booksInEveryYearInitialX, shelfY + 20, shelfX, 14);
 
     if (shelfX > width) {
       shelfY += groupHeight;

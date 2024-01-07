@@ -69,7 +69,7 @@ export function calculateHiddenRectY(originalY, height, svgHeight, rectHeight) {
  * @param {*} fontSize
  * @returns text width
  */
-function getTextWidth(text, fontSize) {
+export function getTextWidth(text, fontSize) {
   const font = fontSize + "px Karla"; // Construct the font string
   // Create a temporary canvas
   const canvas = document.createElement("canvas");

@@ -1,3 +1,5 @@
+import { getTextWidth } from "./util.js";
+
 /**
  * This function draws lines on each book spine to add some dimension.
  * @param {*} book: the book on which the lines are being drawn
@@ -86,6 +88,17 @@ export function drawLine(book, lightGrey) {
   });
 }
 
+/**
+ * This function draws the shelf line for every separated bookshelf (according to year
+ * or rating etc)
+ * @param {*} svg
+ * @param {*} initialX: x position of the first book
+ * @param {*} initialY: y position of the first book
+ * @param {*} finalX: x position of the final book (including rectWidth)
+ * @param {*} height: width of the line for the shelf
+ * @param {*} clr: color of the line of the shelf
+ * @param {*} offset: offset around the bookshelf
+ */
 export function drawShelfLine(
   svg,
   initialX,
@@ -102,4 +115,32 @@ export function drawShelfLine(
     .attr("width", finalX - initialX + offset * 2)
     .attr("height", height)
     .attr("fill", clr);
+}
+
+/**
+ *
+ * @param {*} svg
+ * @param {*} label
+ * @param {*} xPosition
+ * @param {*} yPosision
+ */
+export function drawLabel(
+  svg,
+  label,
+  shelfInitialX,
+  shelfY,
+  shelfFinalX,
+  fontSize
+) {
+  var txtWidth = getTextWidth(label, fontSize);
+
+  var xpos = shelfInitialX + (shelfFinalX - shelfInitialX) / 2 - txtWidth / 2;
+
+  svg
+    .append("text")
+    .text(label)
+    .attr("fill", "black")
+    .attr("font-size", "14px")
+    .attr("x", xpos)
+    .attr("y", shelfY);
 }
