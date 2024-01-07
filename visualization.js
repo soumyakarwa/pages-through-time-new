@@ -14,7 +14,11 @@ import { mapNumRange } from "./util.js";
 export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
   d3.select("#parentDiv").select("svg").remove();
 
-  const offset = 6;
+  const shelfGap = Constants.margin * 8;
+
+  const labelYOffset = 20;
+  const labelFontSize = 14;
+
   // dimemsions of the svg
   const width = parentDiv.clientWidth;
   const height = parentDiv.clientHeight;
@@ -29,23 +33,16 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
   const filterId = glassmorphismFilter(svg, Constants.lightGrey);
 
   // initial x and y position for the shelf
-  let shelfX = offset;
-  let shelfY = Constants.colHeight + Constants.maxRectHeight / 4;
+  let shelfCurrentX = Constants.margin;
+  let shelfCurrentY = Constants.colHeight + Constants.maxRectHeight / 4;
 
   // keys refers to the year
   keys.forEach((year) => {
     // books in every year
     const booksInEveryYear = dataset[year];
 
-    var booksInEveryYearInitialX = shelfX;
-    // year label
-    // svg
-    //   .append("text")
-    //   .text(year)
-    //   .attr("fill", "black")
-    //   .attr("font-size", "14px")
-    //   .attr("x", shelfX)
-    //   .attr("y", shelfY + 20);
+    // initial shelfCurrentX position
+    var booksInEveryYearInitialX = shelfCurrentX;
 
     booksInEveryYear.forEach((d) => {
       const rectWidth = mapNumRange(
@@ -67,36 +64,43 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
        * if the book in the booksInEveryYear is moving out of the svg, move the book to the next line
        * and add a text label
        */
-      if (shelfX + rectWidth + offset > width) {
-        drawLabel(svg, year, booksInEveryYearInitialX, shelfY + 20, shelfX, 14);
+      if (shelfCurrentX + rectWidth + Constants.margin > width) {
+        drawLabel(
+          svg,
+          year,
+          booksInEveryYearInitialX,
+          shelfCurrentY + labelYOffset,
+          shelfCurrentX,
+          labelFontSize
+        );
 
         drawShelfLine(
           svg,
           booksInEveryYearInitialX,
-          shelfY,
-          shelfX,
+          shelfCurrentY,
+          shelfCurrentX,
           2,
           "black",
-          offset
+          Constants.margin
         );
 
-        shelfX = offset;
-        shelfY += Constants.colHeight;
-        booksInEveryYearInitialX = shelfX;
+        shelfCurrentX = Constants.margin;
+        shelfCurrentY += Constants.colHeight;
+        booksInEveryYearInitialX = shelfCurrentX;
 
         // svg
         //   .append("text")
         //   .text(year)
         //   .attr("fill", "black")
         //   .attr("font-size", "14px")
-        //   .attr("x", shelfX)
-        //   .attr("y", shelfY + 20);
+        //   .attr("x", shelfCurrentX)
+        //   .attr("y", shelfCurrentY + 20);
       }
 
-      const rectX = shelfX;
-      const rectY = shelfY - rectHeight;
+      const rectX = shelfCurrentX;
+      const rectY = shelfCurrentY - rectHeight;
 
-      if (shelfY > height) {
+      if (shelfCurrentY > height) {
         height += Constants.colHeight;
       }
 
@@ -143,26 +147,33 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
         .on("mouseout", returnObjectOnMouseOut)
         .attr("cursor", "pointer");
 
-      shelfX += rectWidth;
+      shelfCurrentX += rectWidth;
     });
 
     drawShelfLine(
       svg,
       booksInEveryYearInitialX,
-      shelfY,
-      shelfX,
+      shelfCurrentY,
+      shelfCurrentX,
       2,
       "black",
-      offset
+      Constants.margin
     );
 
-    drawLabel(svg, year, booksInEveryYearInitialX, shelfY + 20, shelfX, 14);
+    drawLabel(
+      svg,
+      year,
+      booksInEveryYearInitialX,
+      shelfCurrentY + labelYOffset,
+      shelfCurrentX,
+      labelFontSize
+    );
 
-    if (shelfX > width) {
-      shelfY += groupHeight;
-      shelfX = 0;
+    if (shelfCurrentX > width) {
+      shelfCurrentY += groupHeight;
+      shelfCurrentX = Constants.margin;
     } else {
-      shelfX += 50;
+      shelfCurrentX += shelfGap;
     }
   });
 }

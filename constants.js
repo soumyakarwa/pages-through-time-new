@@ -23,7 +23,7 @@ export const minRectHeight = 40;
 export const maxRectWidth = 40;
 export const minRectWidth = 10;
 
-export const colHeight = 145;
+export const colHeight = margin * 19;
 
 // EMOTIONS CATEGORIES
 const negativeEmotions = {
