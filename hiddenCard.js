@@ -147,20 +147,20 @@ export function moveObjectOnMouseOver(svg, svgWidth, svgHeight, dataPoint) {
     lineSpacing +
     4;
 
-  prevLineY =
-    wrapText(
-      this.hiddenRect,
-      dataPoint.Emotion,
-      textContainerWidth,
-      textContainerX,
-      prevLineY,
-      lineSpacing,
-      bodyFontSize,
-      "normal",
-      this.rectColor
-    ) +
-    lineSpacing +
-    4;
+  // prevLineY =
+  //   wrapText(
+  //     this.hiddenRect,
+  //     dataPoint.Emotion,
+  //     textContainerWidth,
+  //     textContainerX,
+  //     prevLineY,
+  //     lineSpacing,
+  //     bodyFontSize,
+  //     "normal",
+  //     this.rectColor
+  //   ) +
+  //   lineSpacing +
+  //   4;
 
   prevLineY =
     wrapText(

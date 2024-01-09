@@ -3,10 +3,10 @@ import { createVisualization } from "./visualization.js";
 import { createLegend } from "./legend.js";
 import * as Constants from "./constants.js";
 
-const emotionColorMap = {};
+// const emotionColorMap = {};
 const genreColorMap = {};
 
-mapAttrColor(Constants.emotions, emotionColorMap);
+// mapAttrColor(Constants.emotions, emotionColorMap);
 mapAttrColor(Constants.genres, genreColorMap);
 
 // DATA PROCESSING
@@ -22,39 +22,39 @@ const groupedByYear = Constants.data.reduce((acc, d) => {
 
 const yearKeys = Object.keys(groupedByYear);
 
-var selectedOption = "Emotion";
+var selectedOption = "Genre";
 var chosenSort = Constants.genres;
 var chosenSortAttr = genreColorMap;
-const options = ["Emotion", "Genre"];
+const options = ["Genre"];
 
 createVisualization(groupedByYear, yearKeys, chosenSort, chosenSortAttr);
 
-// createLegend(chosenSort);
+createLegend(chosenSort);
 
-// const dropdown = d3.select("#emotion-dropdown");
-// options.forEach((option) => {
-//   dropdown.append("option").attr("value", option).text(option);
-// });
+const dropdown = d3.select("#emotion-dropdown");
+options.forEach((option) => {
+  dropdown.append("option").attr("value", option).text(option);
+});
 
-// dropdown
-//   .style("margin-top", 1.25 * Constants.margin + "px")
-//   .style("margin-left", 8.5 * Constants.margin + "px");
+dropdown
+  .style("margin-top", 1.25 * Constants.margin + "px")
+  .style("margin-left", 8.5 * Constants.margin + "px");
 
-// dropdown.on("change", function () {
-//   selectedOption = d3.select(this).property("value");
-//   switch (selectedOption) {
-//     case "Emotion":
-//       chosenSort = Constants.emotions;
-//       chosenSortAttr = emotionColorMap;
-//       break;
-//     case "Genre":
-//       chosenSort = Constants.genres;
-//       chosenSortAttr = genreColorMap;
-//       break;
-//   }
-//   createVisualization(groupedByYear, yearKeys, chosenSort, chosenSortAttr);
-//   createLegend(chosenSort);
-// });
+dropdown.on("change", function () {
+  selectedOption = d3.select(this).property("value");
+  switch (selectedOption) {
+    // case "Emotion":
+    //   chosenSort = Constants.emotions;
+    //   chosenSortAttr = emotionColorMap;
+    //   break;
+    case "Genre":
+      chosenSort = Constants.genres;
+      chosenSortAttr = genreColorMap;
+      break;
+  }
+  createVisualization(groupedByYear, yearKeys, chosenSort, chosenSortAttr);
+  createLegend(chosenSort);
+});
 
 // SVG BORDERS
 // svg.append('ellipse')

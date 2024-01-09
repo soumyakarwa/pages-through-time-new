@@ -21,7 +21,7 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
 
   // dimemsions of the svg
   const width = parentDiv.clientWidth;
-  const height = parentDiv.clientHeight;
+  var height = parentDiv.clientHeight;
 
   const svg = d3
     .select("#parentDiv")
@@ -34,7 +34,9 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
 
   // initial x and y position for the shelf
   let shelfCurrentX = Constants.margin;
+  // let shelfCurrentX = Constants.margin * 34;
   let shelfCurrentY = Constants.colHeight + Constants.maxRectHeight / 4;
+  // let shelfCurrentY = Constants.margin * 20;
 
   // keys refers to the year
   keys.forEach((year) => {
@@ -102,6 +104,7 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
 
       if (shelfCurrentY > height) {
         height += Constants.colHeight;
+        svg.attr("height", height);
       }
 
       var rectColor;

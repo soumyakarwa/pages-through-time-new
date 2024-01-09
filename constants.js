@@ -26,39 +26,39 @@ export const minRectWidth = 10;
 export const colHeight = margin * 19;
 
 // EMOTIONS CATEGORIES
-const negativeEmotions = {
-  attributes: ["Outrage", "Fear", "Repulsion"],
-  color: redColor,
-};
-const inBetweenEmotions = {
-  attributes: ["Indifference", "Apprehension", "Confusion"],
-  color: greyColor,
-};
-const hookedOntoEmotions = {
-  attributes: ["Amusement", "Excitement"],
-  color: yellowColor,
-};
-const unxpectedEmotions = {
-  attributes: ["Wonder", "Surprise", "Anticipation"],
-  color: greenColor,
-};
-const sadEmotions = {
-  attributes: ["Despair", "Loss"],
-  color: blueColor,
-};
-const relatableEmotions = {
-  attributes: ["Nostalgia", "Amorous", "Relief"],
-  color: pinkColor,
-};
+// const negativeEmotions = {
+//   attributes: ["Outrage", "Fear", "Repulsion"],
+//   color: redColor,
+// };
+// const inBetweenEmotions = {
+//   attributes: ["Indifference", "Apprehension", "Confusion"],
+//   color: greyColor,
+// };
+// const hookedOntoEmotions = {
+//   attributes: ["Amusement", "Excitement"],
+//   color: yellowColor,
+// };
+// const unxpectedEmotions = {
+//   attributes: ["Wonder", "Surprise", "Anticipation"],
+//   color: greenColor,
+// };
+// const sadEmotions = {
+//   attributes: ["Despair", "Loss"],
+//   color: blueColor,
+// };
+// const relatableEmotions = {
+//   attributes: ["Nostalgia", "Amorous", "Relief"],
+//   color: pinkColor,
+// };
 
-export const emotions = [
-  negativeEmotions,
-  inBetweenEmotions,
-  hookedOntoEmotions,
-  unxpectedEmotions,
-  sadEmotions,
-  relatableEmotions,
-];
+// export const emotions = [
+//   negativeEmotions,
+//   inBetweenEmotions,
+//   hookedOntoEmotions,
+//   unxpectedEmotions,
+//   sadEmotions,
+//   relatableEmotions,
+// ];
 
 // GENRE CATEGORIES
 const fantasy = {
