@@ -60,7 +60,8 @@ export const colHeight = margin * 19;
 //   relatableEmotions,
 // ];
 
-// GENRE CATEGORIES
+//GENRE CATEGORIES
+
 const fantasy = {
   attributes: ["Fantasy", "Urban Fantasy"],
   color: redColor,

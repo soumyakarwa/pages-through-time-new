@@ -33,10 +33,8 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
   const filterId = glassmorphismFilter(svg, Constants.lightGrey);
 
   // initial x and y position for the shelf
-  let shelfCurrentX = Constants.margin;
-  // let shelfCurrentX = Constants.margin * 34;
-  let shelfCurrentY = Constants.colHeight + Constants.maxRectHeight / 4;
-  // let shelfCurrentY = Constants.margin * 20;
+  let shelfCurrentX = Constants.margin * 34;
+  let shelfCurrentY = Constants.margin * 20;
 
   // keys refers to the year
   keys.forEach((year) => {
@@ -86,24 +84,16 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
           Constants.margin
         );
 
-        shelfCurrentX = Constants.margin;
+        shelfCurrentX = Constants.margin * 34;
         shelfCurrentY += Constants.colHeight;
         booksInEveryYearInitialX = shelfCurrentX;
-
-        // svg
-        //   .append("text")
-        //   .text(year)
-        //   .attr("fill", "black")
-        //   .attr("font-size", "14px")
-        //   .attr("x", shelfCurrentX)
-        //   .attr("y", shelfCurrentY + 20);
       }
 
       const rectX = shelfCurrentX;
       const rectY = shelfCurrentY - rectHeight;
 
       if (shelfCurrentY > height) {
-        height += Constants.colHeight;
+        height += Constants.colHeight / 3;
         svg.attr("height", height);
       }
 
