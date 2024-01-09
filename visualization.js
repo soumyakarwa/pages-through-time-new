@@ -92,7 +92,7 @@ export function createVisualization(dataset, keys, chosenSort, chosenSortAttr) {
       const rectX = shelfCurrentX;
       const rectY = shelfCurrentY - rectHeight;
 
-      if (shelfCurrentY > height) {
+      if (shelfCurrentY + labelFontSize > height) {
         height += Constants.colHeight / 3;
         svg.attr("height", height);
       }
