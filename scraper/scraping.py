@@ -5,6 +5,18 @@ import re
 import time
 import math
 
+def extract_book_id_from_url(url):
+    # This pattern will match the numerical sequence before the first dot, which follows the last slash in the URL
+    match = re.search(r'/(\d+)\.', url)
+    return match.group(1) if match else None
+
+def create_goodreads_url(book_id, book_title):
+    # Extract the primary title before any parentheses
+    primary_title = book_title.split(' (')[0]
+    # Convert the title to lowercase and replace spaces with dashes
+    title_for_url = primary_title.lower().replace(' ', '-')
+    return f"https://www.goodreads.com/book/show/{book_id}-{title_for_url}"
+
 def get_max_pages(soup):
     pagination_div = soup.find('div', id='reviewPagination')
     page_links = pagination_div.find_all('a') if pagination_div else []
@@ -27,7 +39,7 @@ def scrape_goodreads_shelf(user_id, shelf):
 
     with open('goodreads_books.csv', 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
-        writer.writerow(['Title', 'Author', 'Length', 'Rating', 'Date Published', 'Date Read', 'Read Count', 'ISBN13 Number', 'Cover Image'])
+        writer.writerow(['Title', 'Author', 'Length', 'Rating', 'Date Published', 'Date Read', 'Date Added', 'Read Count', 'ISBN13 Number', 'Amazon Standard Identification Number', 'Goodreads Number', 'Review', 'Cover Image'])
 
         # Iterate over all pages
         for page in range(1, max_pages + 1):
@@ -63,23 +75,39 @@ def scrape_goodreads_shelf(user_id, shelf):
                 stars = rating_div.find_all('span', class_='staticStar') if rating_div else 'No Rating Found'
                 rating = sum(1 for star in stars if 'p10' in star['class'])
 
-                # YEAR PUBLISHED
+                # DATE PUBLISHED
                 date_pub_div = book.find('td', class_='field date_pub').find('div', class_='value')
-                date_published = date_pub_div.get_text(strip=True) if date_pub_div else 'No Date Published'
+                date_published = date_pub_div.get_text(strip=True) if date_pub_div else 'No Date Published Found'
 
-                # YEAR READ
+                # DATE READ
                 date_read_div = book.find('td', class_='field date_read').find('span', class_='date_read_value')
-                date_read = date_read_div.get_text(strip=True) if date_read_div else 'Date Not Set'
+                date_read = date_read_div.get_text(strip=True) if date_read_div else 'Date Read Not Set'
+
+                # DATE ADDED
+                date_added_div = book.find('td', class_='field date_added').find('span')
+                date_added = date_added_div['title'] if date_added_div else 'Date Added Not Available'
 
                 # READ COUNT
                 read_count_div = book.find('td', class_='field read_count').find('div', class_='value')
-                read_count = read_count_div.get_text(strip=True) if date_pub_div else 'No Read Count'
+                read_count = read_count_div.get_text(strip=True) if date_pub_div else 'No Read Count Found'
 
                 # ISBN 13 NUMBER
                 isbn13_div = book.find('td', class_='field isbn13').find('div', class_='value')
-                isbn13 = isbn13_div.get_text(strip=True) if isbn13_div else 'No ISBN Number'
+                isbn13 = isbn13_div.get_text(strip=True) if isbn13_div else 'No ISBN Number Found'
 
-                writer.writerow([title, author, length, rating, date_published, date_read, read_count, isbn13, cover])
+                # ASIN NUMBER
+                asin_div = book.find('td', class_='field asin').find('div', class_='value')
+                asin = asin_div.get_text(strip=True) if asin_div else 'No ASIN Number Found'
+
+                # GOODREADS NUMBER
+                goodreads_number = extract_book_id_from_url(cover)
+
+                # REVIEW
+                review_div = book.find('td', class_='field review').find('div', class_='value')
+                review = review_div.get_text(strip=True) if review_div and not "greyText" in review_div['class'] else 'No Review'
+                
+                # writes the data into the spreadsheet
+                writer.writerow([title, author, length, rating, date_published, date_read, date_added, read_count, isbn13, asin, goodreads_number, review, cover])
 
             # Be polite and don't hammer the server; pause between page requests
             time.sleep(1)
